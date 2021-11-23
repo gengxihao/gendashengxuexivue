@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-  import {defineProps, computed, ref, defineEmits} from "vue";
+  import {computed, ref, defineEmits} from "vue";
   let props = defineProps({
     modelValue: Number,
     temp: {
@@ -45,7 +45,7 @@
 
   /**
    * 鼠标移动
-   */  
+   */
   function mouseOver (num) {
     width.value = num;
   }
