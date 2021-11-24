@@ -1,6 +1,11 @@
 <template>
-   <div class="todo-list">
-    <input type="text" v-model="title" @keydown.enter="addTodo"/>
+  <div class="todo-list">
+    <transition name="model">
+      <div class="warning-box" v-show="isShowWarning">
+        大兄弟，你啥也没输入
+      </div>
+    </transition>
+    <input type="text" v-model="title" @keydown.enter="addTodo" @blur="() => isShowWarning.value = true"/>
     <button v-if="active < allNum" @click="clear">清除</button>
     <ul v-if="todos.length">
       <li v-for="(item, k) in todos" :key="k">
@@ -21,7 +26,12 @@
     />
     
     <div class="box" :style="`width:${boxWidth}px`"></div>
-    <!-- <button @click="boxAdd">增加</button> -->
+
+    <transition name="fade">
+      <h2 v-show="showText">你好，VUE</h2>
+    </transition>
+
+    <button @click="isShow">增加</button>
   </div>
 </template>
 
@@ -29,10 +39,11 @@
   import {ref} from "vue"
   import {useTodos, useMouse} from "../utils/useUtils"
   import {Rate} from "../components"
-  let {title, todos, allDone, active, allNum, addTodo} = useTodos();
+  let {title, todos, allDone, active, allNum, addTodo, isShowWarning} = useTodos();
   let {x, y} = useMouse();
   let rateNum = ref(3.5);
   let boxWidth = ref(30);
+  let showText = ref(true);
   function clear () {
     todos.value = todos.value.filter((item) => {
       return !item.done;
@@ -42,8 +53,8 @@
   /**
    * 添加宽度
    */
-  function boxAdd () {
-    boxWidth.value += 100;
+  function isShow () {
+    showText.value = !showText.value;
   }
 </script>
 
@@ -60,4 +71,39 @@
   }
   
   @keyframes move { 0% {left:0px} 50% {left:200px} 100% {left:0}}
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s linear;
+  }
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+  }
+
+  .model-enter-from {
+    opacity: 0;
+    transform: rotateY(-60px);
+  }
+
+  .model-enter-active {
+    transition: all .3s ease;
+  }
+
+  .model-leave-to {
+    opacity: 0;
+    transform: rotateY(-60px);
+  }
+
+  .model-leave-active {
+    transition: add .3 ease;
+  }
+
+  .warning-box {
+    width: 220px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    background-color: aqua;
+  }
 </style>

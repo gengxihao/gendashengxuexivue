@@ -1,12 +1,17 @@
 import {ref, computed, onMounted, onUnmounted, watchEffect} from "vue";
 
 function useTodos() {
-  let title = ref(0);
+  let title = ref('');
+  let isShowWarning = ref(false);
   // let todos = ref([{title: '学习vue', done: false}]);
   let todos = ref(JSON.parse(localStorage.getItem('todos') || '[]'));
 
   let allDone = ref(false);
   function addTodo () {
+    if (title.value === '') {
+      isShowWarning.value = true;
+      return false;
+    }
     todos.value.push({
       title: title.value,
       done: false
@@ -39,7 +44,7 @@ function useTodos() {
     console.log(title.value, todos.value, '8888');
   })
 
-  return {title, todos, allDone, addTodo, active, allNum}
+  return {title, todos, allDone, addTodo, active, allNum, isShowWarning}
 }
 
 /**

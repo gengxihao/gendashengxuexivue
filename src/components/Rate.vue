@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-  import {computed, ref, defineEmits} from "vue";
+  import {computed, ref} from "vue";
   let props = defineProps({
     modelValue: Number,
     temp: {
