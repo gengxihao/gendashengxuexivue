@@ -5,13 +5,15 @@
         大兄弟，你啥也没输入
       </div>
     </transition>
-    <input type="text" v-model="title" @keydown.enter="addTodo" @blur="() => isShowWarning.value = true"/>
+    <input type="text" v-model="title" @keydown.enter="addTodo" @blur="closeBox"/>
     <button v-if="active < allNum" @click="clear">清除</button>
     <ul v-if="todos.length">
-      <li v-for="(item, k) in todos" :key="k">
-        <input type="checkbox" v-model="item.done"/>
-        <span class="">{{item.title}}</span>
-      </li>
+      <transition-group name="flip-list" tag="ul">
+        <li v-for="(item, k) in todos" :key="k">
+          <input type="checkbox" v-model="item.done"/>
+          <span>{{item.title}}</span>
+        </li>
+      </transition-group>
     </ul>
     <div v-else>
       暂无数据
@@ -56,6 +58,10 @@
   function isShow () {
     showText.value = !showText.value;
   }
+
+  function closeBox () {
+    isShowWarning.value = false;
+  }
 </script>
 
 <style scoped>
@@ -96,7 +102,7 @@
   }
 
   .model-leave-active {
-    transition: add .3 ease;
+    transition: add .3s ease;
   }
 
   .warning-box {
@@ -105,5 +111,20 @@
     line-height: 40px;
     text-align: center;
     background-color: aqua;
+  }
+
+  .flip-list-move {
+    transition: transform .8s ease;
+  }
+
+  .flip-list-enter-active,
+  .flip-list-leave-active {
+    transition: all 1s ease;
+  }
+
+  .flip-list-enter-from,
+  .flip-list-leave-to {
+    opacity: 0;
+    transform: translateX(30px);
   }
 </style>
