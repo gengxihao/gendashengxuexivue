@@ -32,20 +32,27 @@
     <transition name="fade">
       <h2 v-show="showText">你好，VUE</h2>
     </transition>
-
-    <button @click="isShow">增加</button>
+    <div>
+      {{count}}
+    </div>
+    <button class="add-but" @click="isShow">增加</button>
   </div>
 </template>
 
 <script setup>
-  import {ref} from "vue"
-  import {useTodos, useMouse} from "../utils/useUtils"
-  import {Rate} from "../components"
+  import {userStore} from "../store/gvuex";
+  import {computed, ref} from "vue"
+  // import {useStore} from "vuex";
+  import {useTodos, useMouse} from "../utils/useUtils";
+  import {Rate} from "../components";
   let {title, todos, allDone, active, allNum, addTodo, isShowWarning} = useTodos();
   let {x, y} = useMouse();
   let rateNum = ref(3.5);
   let boxWidth = ref(30);
   let showText = ref(true);
+  let store = userStore();
+  let count = computed(() => store.state.count);
+
   function clear () {
     todos.value = todos.value.filter((item) => {
       return !item.done;
@@ -56,6 +63,7 @@
    * 添加宽度
    */
   function isShow () {
+    store.commit('add')
     showText.value = !showText.value;
   }
 
@@ -126,5 +134,21 @@
   .flip-list-leave-to {
     opacity: 0;
     transform: translateX(30px);
+  }
+
+  .add-but {
+    background: #1b8f5a;
+    width: 200px;
+    height: 40px;
+    border-radius: 4px;
+    text-align: center;
+    border: none;
+    color: #fff;
+    transition: background .25s ease-in;
+  }
+
+  .add-but:hover {
+    background: red;
+    transition: background .35s ease-out;
   }
 </style>
